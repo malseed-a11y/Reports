@@ -54,7 +54,7 @@ class reports_enqueue
         $disk_free  = $this->disk->get_free_size();
         $disk_used  = $disk_total - $disk_free;
 
-        wp_enqueue_script('disk-chart-js', plugin_dir_url(__FILE__) . 'assets/disk_chart.js', ['chart-js'], null, true);
+        wp_enqueue_script('disk-chart-js', plugin_dir_url(__FILE__) . 'assets/js/disk_chart.js', ['chart-js'], null, true);
 
         wp_localize_script('disk-chart-js', 'diskData', [
             'used' => round($disk_used / (1024 * 1024 * 1024), 2),
