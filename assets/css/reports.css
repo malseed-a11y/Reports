@@ -50,8 +50,8 @@
   padding: 20px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   margin: 0 auto 20px auto;
-  width: 80%;
-  max-width: 600px;
+  width: 90%;
+  max-height: 500px;
   aspect-ratio: 1/1;
   display: flex;
   flex-direction: column;

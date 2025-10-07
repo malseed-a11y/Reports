@@ -16,26 +16,13 @@ class logs_view
 
     public function render_logs_page()
     {
-        $activity = $this->acts->editors_activity();
+        echo '<div class="wrap-logs">';
+        echo '<h1>Logs Reports</h1>';
+        echo '<div class="editors-card">';
+        echo '<h2>Editors Activity</h2>';
+        echo '<canvas id="editorsChart" width="400" height="200"></canvas>';
+        echo '</div>';
 
-        echo '<h1>Editors Activity</h1>';
-
-        if (!empty($activity['labels'])) {
-            echo '<table border="1" cellpadding="10" cellspacing="0">';
-            echo '<thead><tr><th>Editor Name</th><th>Number of Posts</th></tr></thead>';
-            echo '<tbody>';
-            foreach ($activity['labels'] as $index => $editor_name) {
-                $post_count = $activity['data'][$index];
-                echo '<tr>';
-                echo '<td>' . esc_html($editor_name) . '</td>';
-                echo '<td>' . esc_html($post_count) . '</td>';
-                echo '</tr>';
-            }
-            echo '</tbody>';
-            echo '</table>';
-        } else {
-            echo '<p>No editors found.</p>';
-        }
         //===============================
         // user count
         $users_count =  $this->db->get_usage_data('users_count');

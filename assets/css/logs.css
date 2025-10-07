@@ -1,1 +1,41 @@
-/*# sourceMappingURL=logs.css.map */
+.wrap-logs {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin: 0 auto 20px auto;
+  width: 90%;
+  max-height: 500px;
+  aspect-ratio: 1/1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.wrap-logs h1 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+  text-align: center;
+}
+.wrap-logs .editors-card {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.wrap-logs .editors-card h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #555;
+}
+.wrap-logs .editors-card canvas {
+  display: block;
+  margin: auto;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 500px;
+  max-height: 500px;
+}/*# sourceMappingURL=logs.css.map */
