@@ -3,24 +3,28 @@
 require_once plugin_dir_path(__FILE__) . 'classes/DB-class.php';
 require_once plugin_dir_path(__FILE__) . 'classes/Disk-usage.php';
 require_once plugin_dir_path(__FILE__) . 'classes/RAM-CPU-usage.php';
+require_once plugin_dir_path(__FILE__) . 'classes/Editors-acts.php';
 
 class reports_enqueue
 {
     public $db;
     public $disk;
     public $usage;
+    public $editors;
+
     public function __construct()
     {
         $this->usage = new ram_cpu_usage();
         $this->db = new db_manegar();
         $this->disk = new disk_usage();
-
+        $this->editors = new editors_acts();
         $this->usage->save_usage();
     }
 
-    public function enqueue($hook)
+    public function enqueue()
     {
-        if ($hook !== 'toplevel_page_server-reports') return;
+
+
 
         //==styles==
         wp_enqueue_style('reports-styles', plugin_dir_url(__FILE__) . 'assets/css/reports.css');
@@ -59,6 +63,15 @@ class reports_enqueue
         wp_localize_script('disk-chart-js', 'diskData', [
             'used' => round($disk_used / (1024 * 1024 * 1024), 2),
             'free' => round($disk_free / (1024 * 1024 * 1024), 2),
+        ]);
+        // Editors activity
+
+        $editors_activity = $this->editors->editors_activity();
+        wp_enqueue_script('editors-chart-js', plugin_dir_url(__FILE__) . 'assets/js/editors_chart.js', ['chart-js'], null, true);
+
+        wp_localize_script('editors-chart-js', 'editorsData', [
+            'labels' => $editors_activity['labels'],
+            'data' => $editors_activity['data'],
         ]);
     }
 }
