@@ -1,5 +1,9 @@
 <?php
-class db_manegar
+
+namespace Reports\db;
+
+if (!defined('ABSPATH')) die('-1');
+class DbUsage
 {
     public $db;
     public $table_usage;
@@ -11,7 +15,6 @@ class db_manegar
         $this->table_usage = $wpdb->prefix . 'table_usage';
     }
 
-    // Create usage table
     public function create_usage_table()
     {
         require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
@@ -28,7 +31,6 @@ class db_manegar
         dbDelta($sql);
     }
 
-    // Insert usage data
     public function insert_usage_data($data)
     {
         if (empty($data) || !is_array($data)) return false;
@@ -41,20 +43,18 @@ class db_manegar
         return $this->db->insert($this->table_usage, $data);
     }
 
-    // Get usage data
     public function get_usage_data($name_usage)
     {
         return $this->db->get_results(
             $this->db->prepare(
                 "SELECT * FROM {$this->table_usage} WHERE name_usage = %s ORDER BY created_at DESC LIMIT 20",
-                $name_usage,
+                $name_usage
 
             ),
             ARRAY_A
         );
     }
 
-    //delete usage table
     public function delete_usage_table()
     {
         $this->db->query("DROP TABLE IF EXISTS {$this->table_usage}");

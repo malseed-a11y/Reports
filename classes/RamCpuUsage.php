@@ -1,8 +1,14 @@
 <?php
 
-require_once plugin_dir_path(__FILE__) . '/DB-class.php';
+namespace Reports\classes;
 
-class ram_cpu_usage
+if (!defined('ABSPATH')) die('-1');
+
+
+use Reports\db\DbUsage;
+
+
+class RamCpuUsage
 {
     public $ram;
     public $cpu;
@@ -10,7 +16,7 @@ class ram_cpu_usage
 
     public function __construct()
     {
-        $this->db = new db_manegar();
+        $this->db = new DbUsage();
     }
 
     public function get_current_ram()

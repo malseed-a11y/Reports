@@ -1,6 +1,10 @@
 <?php
 
-class editors_acts
+namespace Reports\classes;
+
+if (!defined('ABSPATH')) die('-1');
+
+class EditorsActs
 {
     public function editors_activity()
     {

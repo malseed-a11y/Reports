@@ -1,13 +1,17 @@
 <?php
 
-require_once plugin_dir_path(__FILE__) . '/db-class.php';
+namespace Reports\classes;
 
-class Users_count
+if (!defined('ABSPATH')) die('-1');
+
+use Reports\db\DbUsage;
+
+class UserCount
 {
     public $db;
     public function __construct()
     {
-        $this->db = new db_manegar();
+        $this->db = new DbUsage();
     }
 
     public function get_users_count()

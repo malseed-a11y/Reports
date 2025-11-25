@@ -1,6 +1,11 @@
 <?php
 
-class disk_usage
+namespace Reports\classes;
+
+
+if (!defined('ABSPATH')) die('-1');
+
+class DiskUsage
 {
     public function get_full_size()
     {

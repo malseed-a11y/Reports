@@ -1,8 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
   const ramCtx = document.getElementById("ramChart");
   const ramData = window.ramData;
-  const times = ramData ? ramData.times : [];
-  const values = ramData ? ramData.values : [];
+
+  const times = ramData ? ramData.labels : [];
+  const values = ramData ? ramData.data : [];
 
   if (ramCtx && ramData) {
     const formattedTimes = times.map((t) => {
@@ -11,7 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
       return parts ? parts.slice(0, 5) : "";
     });
 
-    // Calculate min and max for y-axis
     const yMin = Math.min(...values.map((v) => parseFloat(v) || 0));
     const yMax = Math.max(...values.map((v) => parseFloat(v) || 0));
 
@@ -21,14 +21,14 @@ document.addEventListener("DOMContentLoaded", function () {
         labels: formattedTimes,
         datasets: [
           {
-            label: "RAM Usage (MB)",
+            label: "ram Usage (MB)",
             data: values.map((v) => parseFloat(v) || 0),
-            borderWidth: 1,
-            borderColor: "blue",
-            backgroundColor: "rgba(0,0,255,0.1)",
+            borderWidth: 2,
+            borderColor: "red",
+            backgroundColor: "rgba(255,0,0,0.1)",
             fill: true,
             tension: 0.4,
-            pointRadius: 1,
+            pointRadius: 2,
           },
         ],
       },
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", function () {
         maintainAspectRatio: false,
         scales: {
           y: {
-            title: { display: true, text: "MB" },
+            title: { display: true, text: "ram Usage (MB)" },
             min: Math.floor(yMin * 0.9),
             max: Math.ceil(yMax * 1.1),
           },
