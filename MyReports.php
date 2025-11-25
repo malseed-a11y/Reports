@@ -15,10 +15,7 @@ define('REPORTS_PLUGIN_URL', plugin_dir_url(__FILE__));
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
 use Reports\classes\LogsHistory;
-use Reports\classes\EditorsActs;
-use Reports\classes\DiskUsage;
-use Reports\classes\RamCpuUsage;
-use Reports\classes\UserCount;
+
 
 use Reports\db\DbUsage;
 use Reports\db\DbLogs;
@@ -45,7 +42,6 @@ class MyReports
         add_action('admin_enqueue_scripts', [$this->enqueue, 'enqueue']);
     }
 
-
     public function add_admin_menu()
     {
         add_menu_page(
@@ -53,13 +49,11 @@ class MyReports
             'Reports',
             'manage_options',
             'server-reports',
-            function () {
-                $view = new ViewReports();
-                echo $view->render_admin_page();
-            },
+            [$this, 'render_reports_page'],
             'dashicons-chart-area',
             4
         );
+
         add_submenu_page(
             'server-reports',
             'Logs Reports',
@@ -68,6 +62,11 @@ class MyReports
             'logs-reports',
             [$this->logs_view, 'render_logs_page']
         );
+    }
+
+    public function render_reports_page()
+    {
+        echo $this->report_view->render_admin_page();
     }
 }
 
