@@ -34,17 +34,17 @@ class ViewLogs
 
         //===============================
         // user count
-        echo '<canvas id="userChart" height="200"></canvas>';
+        // echo '<canvas id="userChart" height="200"></canvas>';
 
         //===============================
         // login activity
 
 
-        echo '<h1>تقارير النشاطات</h1>';
+        echo '<h1>Activity Reports</h1>';
 
         $login_activity = $this->db_logs->get_logs_data();
         if ($login_activity) {
-            echo '<h2>نشاط تسجيل الدخول</h2>';
+            echo '<h2>Login Activity</h2>';
             echo '<table border="1" cellpadding="10" cellspacing="0">';
             echo '<thead>
                     <tr>
