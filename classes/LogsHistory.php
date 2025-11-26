@@ -30,10 +30,6 @@ class LogsHistory
         return reset($user->roles);
     }
 
-    //=======================================================================
-    //REVIEW - see if i can get the user location from the ip address
-    public function get_ip_location($ip) {}
-    //=======================================================================
 
     public function get_ip_address()
     {
@@ -85,7 +81,7 @@ class LogsHistory
         $ip = $this->get_ip_address();
         $user_id = $user->ID;
         $role = $this->get_user_role($user_id);
-        $this->login_activity_add($user_login, $user_id, 'success', $ip, $role);
+        $this->login_activity_add($user_login, $user_id, '🟩 success', $ip, $role);
     }
 
     public function login_failed($username)
@@ -93,6 +89,6 @@ class LogsHistory
         $ip = $this->get_ip_address();
         $user_id = 0;
         $role = 'N/A';
-        $this->login_activity_add($username, $user_id, 'failed', $ip, $role);
+        $this->login_activity_add($username, $user_id, '🟥 failed', $ip, $role);
     }
 }

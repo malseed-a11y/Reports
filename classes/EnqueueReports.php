@@ -25,7 +25,7 @@ class EnqueueReports
         $this->db = new DbUsage();
         $this->disk = new DiskUsage();
         $this->editors = new EditorsActs();
-        $this->usage->save_usage();
+        // $this->usage->save_usage();
 
         $this->users = new UserCount();
         $this->users->save_users_count();
@@ -40,32 +40,15 @@ class EnqueueReports
         //==js==
         wp_enqueue_script('chart-js', 'https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js', [], null);
 
+        $interval = (int) get_option('reports_usage_interval', 1000);
+        if ($interval < 1000) {
+            $interval = 1000;
+        }
         // =======================================================
-        // RAM usage 
+        // RAM and CPU
         // =======================================================
-        $ram_usage = $this->db->get_usage_data('RAM');
-        $ram_labels = array_column($ram_usage, 'created_at');
-        $ram_data = array_column($ram_usage, 'value_usage');
 
-        wp_enqueue_script(
-            'ram-chart-js',
-            REPORTS_PLUGIN_URL . 'assets/js/ram_chart.js',
-            ['chart-js'],
-            null,
-            true
-        );
-
-        wp_localize_script('ram-chart-js', 'ramData', [
-            'labels' => $ram_labels,
-            'data' => $ram_data,
-        ]);
-
-        // =======================================================
-        // CPU usage 
-        // =======================================================
-        $cpu_usage = $this->db->get_usage_data('CPU');
-        $cpu_labels = array_column($cpu_usage, 'created_at');
-        $cpu_data = array_column($cpu_usage, 'value_usage');
+        // CPU
         wp_enqueue_script(
             'cpu-chart-js',
             REPORTS_PLUGIN_URL . 'assets/js/cpu_chart.js',
@@ -74,48 +57,95 @@ class EnqueueReports
             true
         );
 
-        wp_localize_script('cpu-chart-js', 'cpuData', [
-            'labels' => $cpu_labels,
-            'data' => $cpu_data,
+        wp_localize_script('cpu-chart-js', 'CpuAjax', [
+            'url'      => admin_url('admin-ajax.php'),
+            'action'   => 'reports_usage',
+            'interval' => $interval,
         ]);
+
+        // RAM
+        wp_enqueue_script(
+            'ram-chart-js',
+            REPORTS_PLUGIN_URL . 'assets/js/ram_chart.js',
+            ['chart-js'],
+            null,
+            true
+        );
+
+        wp_localize_script('ram-chart-js', 'RamAjax', [
+            'url'      => admin_url('admin-ajax.php'),
+            'action'   => 'reports_usage',
+            'interval' => $interval,
+        ]);
+
 
         // =======================================================
         // Users count 
         // =======================================================
-        $user_count = $this->db->get_usage_data('users_count');
-        $user_labels = array_column($user_count, 'created_at');
-        $user_data = array_column($user_count, 'value_usage');
+        // $user_count = $this->db->get_usage_data('users_count');
+        // $user_labels = array_column($user_count, 'created_at');
+        // $user_data = array_column($user_count, 'value_usage');
 
-        wp_enqueue_script('user-chart-js', REPORTS_PLUGIN_URL . 'assets/js/user_chart.js', ['chart-js'], null, true);
+        // wp_enqueue_script('user-chart-js', REPORTS_PLUGIN_URL . 'assets/js/user_chart.js', ['chart-js'], null, true);
 
-        wp_localize_script('user-chart-js', 'userData', [
-            'labels' => $user_labels,
-            'data' => $user_data,
-        ]);
+        // wp_localize_script('user-chart-js', 'userData', [
+        //     'labels' => $user_labels,
+        //     'data' => $user_data,
+        // ]);
 
         // =======================================================
         // Disk chart
         // =======================================================
-        $disk_total = $this->disk->get_full_size();
-        $disk_free  = $this->disk->get_free_size();
-        $disk_used  = $disk_total - $disk_free;
+        $report = $this->disk->get_main_folders_report();
 
-        wp_enqueue_script('disk-chart-js', REPORTS_PLUGIN_URL . 'assets/js/disk_chart.js', ['chart-js'], null, true);
+        // main folders (bytes)
+        $_themes  = isset($report['themes'])  ? (int) $report['themes']  : 0;
+        $_plugins = isset($report['plugins']) ? (int) $report['plugins'] : 0;
+        $_uploads = isset($report['uploads']) ? (int) $report['uploads'] : 0;
+        $_admin  = isset($report['wp_admin']) ? (int) $report['wp_admin'] : 0;
+        // to MB
+        function bytes_to_mb($bytes)
+        {
+            if ($bytes <= 0) {
+                return 0;
+            }
+            return round($bytes / (1024  * 1024), 2);
+        }
+
+        wp_enqueue_script(
+            'disk-chart-js',
+            REPORTS_PLUGIN_URL . 'assets/js/disk_chart.js',
+            ['chart-js'],
+            null,
+            true
+        );
 
         wp_localize_script('disk-chart-js', 'diskData', [
-            'used' => round($disk_used / (1024 * 1024 * 1024), 2),
-            'free' => round($disk_free / (1024 * 1024 * 1024), 2),
+            'themes'  => bytes_to_mb($_themes),
+            'plugins' => bytes_to_mb($_plugins),
+            'uploads' => bytes_to_mb($_uploads),
+            'admin'   => bytes_to_mb($_admin),
+
         ]);
+
 
         // =======================================================
         // Editors activity 
         // =======================================================
         $editors_activity = $this->editors->editors_activity();
-        wp_enqueue_script('editors-chart-js', REPORTS_PLUGIN_URL . 'assets/js/editors_chart.js', ['chart-js'], null, true);
+
+        wp_enqueue_script(
+            'editors-chart-js',
+            REPORTS_PLUGIN_URL . 'assets/js/editors_chart.js',
+            ['chart-js'],
+            null,
+            true
+        );
 
         wp_localize_script('editors-chart-js', 'editorsData', [
-            'labels' => $editors_activity['labels'],
-            'data' => $editors_activity['data'],
+            'labels'  => $editors_activity['labels'],
+            'totals'  => $editors_activity['totals'],
+            'details' => $editors_activity['details'],
         ]);
     }
 }

@@ -13,7 +13,7 @@ class DbLogs
     {
         global $wpdb;
         $this->db = $wpdb;
-        $this->table_logs = $wpdb->prefix . 'table_logs';
+        $this->table_logs = $wpdb->prefix . 'report_table_logs';
     }
 
     public function create_logs_table()
@@ -57,5 +57,23 @@ class DbLogs
     public function delete_logs_table()
     {
         $this->db->query("DROP TABLE IF EXISTS {$this->table_logs}");
+    }
+
+
+    public function delete_old_logs($days)
+    {
+        $days = (int) $days;
+        if ($days <= 0) {
+            return;
+        }
+
+        $threshold = gmdate('Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS);
+
+        $sql = $this->db->prepare(
+            "DELETE FROM {$this->table_logs} WHERE login_time < %s",
+            $threshold
+        );
+
+        $this->db->query($sql);
     }
 }
