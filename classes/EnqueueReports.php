@@ -1,14 +1,14 @@
 <?php
 
-namespace Reports\classes;
+namespace SimpleReports\classes;
 
 if (!defined('ABSPATH')) die('-1');
 
-use Reports\classes\DiskUsage;
-use Reports\classes\RamCpuUsage;
-use Reports\classes\UserCount;
-use Reports\db\DbUsage;
-use Reports\classes\EditorsActs;
+use SimpleReports\classes\DiskUsage;
+use SimpleReports\classes\RamCpuUsage;
+use SimpleReports\classes\UserCount;
+use SimpleReports\db\DbUsage;
+use SimpleReports\classes\EditorsActs;
 
 
 class EnqueueReports
@@ -40,14 +40,14 @@ class EnqueueReports
         //==js==
         wp_enqueue_script('chart-js', 'https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js', [], null);
 
-        $interval = (int) get_option('reports_usage_interval', 1000);
-        if ($interval < 1000) {
-            $interval = 1000;
-        }
         // =======================================================
         // RAM and CPU
         // =======================================================
 
+        $interval = (int) get_option('usage_interval', 1000);
+        if ($interval < 1000) {
+            $interval = 1000;
+        }
         // CPU
         wp_enqueue_script(
             'cpu-chart-js',

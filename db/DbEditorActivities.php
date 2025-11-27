@@ -1,6 +1,6 @@
 <?php
 
-namespace Reports\db;
+namespace SimpleReports\db;
 
 if (!defined('ABSPATH')) {
     die('-1');
@@ -83,7 +83,7 @@ class DbEditorActivities
         );
     }
 
-    public function delete_activity_table()
+    public function delete_table()
     {
         $this->db->query("DROP TABLE IF EXISTS {$this->table_name}");
     }
@@ -96,11 +96,11 @@ class DbEditorActivities
             return;
         }
 
-        $threshold = gmdate('Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS);
+        $delete_date = gmdate('Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS);
 
         $sql = $this->db->prepare(
             "DELETE FROM {$this->table_name} WHERE last_updated < %s",
-            $threshold
+            $delete_date
         );
 
         $this->db->query($sql);

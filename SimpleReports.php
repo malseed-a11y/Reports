@@ -1,12 +1,12 @@
 <?php
 
 /**
- * Plugin Name: Reports
+ * Plugin Name: Simple Reports
  * Description: Reports of the website.
  * Version: 1.2
  * Author: mosaab
  * Author URI: https://github.com/malseed-a11y
- * Text Domain: reports
+ * Text Domain: simple-reports
  * Domain Path: /languages
  * License: GPLv2
  * License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -15,40 +15,46 @@
  * Tested up to: 7.0
  */
 
-namespace Reports;
+namespace SimpleReports;
 
 if (!defined('ABSPATH')) die('-1');
 
 define('REPORTS_PLUGIN_URL', plugin_dir_url(__FILE__));
+
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
-use Reports\classes\LogsHistory;
-use Reports\classes\EnqueueReports;
-use Reports\classes\RamCpuUsage;
+use SimpleReports\classes\LogsHistory;
+use SimpleReports\classes\EnqueueReports;
+use SimpleReports\classes\RamCpuUsage;
 
-use Reports\db\DbLogs;
+use SimpleReports\db\DbEditorActivities;
+use SimpleReports\db\DbLogs;
 
-use Reports\view\ViewReports;
-use Reports\view\ViewLogs;
-use Reports\view\ViewSettings;
+use SimpleReports\view\ViewReports;
+use SimpleReports\view\ViewLogs;
+use SimpleReports\view\ViewSettings;
 
-class MyReports
+class SimpleReports
 {
     public $report_view;
     public $enqueue;
     public $logs_view;
     public $settings_view;
-
+    public $db_logs;
     public function __construct()
     {
         $this->report_view   = new ViewReports();
         $this->logs_view     = new ViewLogs();
         $this->settings_view = new ViewSettings();
+        $this->db_logs       = new DbLogs();
         $this->enqueue       = new EnqueueReports();
         new LogsHistory();
 
         add_action('admin_menu', [$this, 'add_admin_menu']);
         add_action('admin_enqueue_scripts', [$this->enqueue, 'enqueue']);
+
+        add_action('wp', [$this, 'register_my_cronjob']);
+        add_action([$this, 'register_my_cronjob'], [$this, 'register_my_cronjob_function']);
     }
 
     public function add_admin_menu()
@@ -86,10 +92,29 @@ class MyReports
     {
         echo $this->report_view->render_admin_page();
     }
+
+
+    public function register_my_cronjob()
+    {
+        if (!wp_next_scheduled('reports_cleanup_logs')) {
+            wp_schedule_event(time(), 'hourly', 'reports_cleanup_logs');
+        }
+    }
+    public function register_my_cronjob_function()
+    {
+        $days = (int) get_option('reports_logs_days', 30) >= 1 ? (int) get_option('reports_logs_days', 30) : 30;
+
+        $this->db_logs->delete_old_logs($days);
+    }
 }
 
-new MyReports();
+// active plugin
+if (!class_exists('SimpleReports')) {
+    new SimpleReports();
+}
 
+
+// Ajax handler for RAM and CPU usage
 add_action('wp_ajax_reports_usage', function () {
     $usage = new RamCpuUsage();
     $usage->output_json();
@@ -100,27 +125,19 @@ add_action('wp_ajax_nopriv_reports_usage', function () {
     $usage->output_json();
 });
 
-
-add_action('reports_cleanup_logs', function () {
-
-    $days = (int) get_option('reports_logs_retention_days', 30);
-    if ($days < 1) {
-        $days = 30;
-    }
-
-    $db_logs = new \Reports\db\DbLogs();
-    $db_logs->delete_old_logs($days);
-});
-
+// Plugin activation and deactivation hooks
 register_activation_hook(__FILE__, function () {
-    if (!wp_next_scheduled('reports_cleanup_logs')) {
-        wp_schedule_event(time(), 'daily', 'reports_cleanup_logs');
-    }
+    $db_acts = new DbEditorActivities();
+    $db_acts->create_table();
+
+    $db_logs = new DbLogs();
+    $db_logs->create_logs_table();
 });
 
 register_deactivation_hook(__FILE__, function () {
-    $timestamp = wp_next_scheduled('reports_cleanup_logs');
-    if ($timestamp) {
-        wp_unschedule_event($timestamp, 'reports_cleanup_logs');
-    }
+    $db_acts = new DbEditorActivities();
+    $db_acts->delete_table();
+
+    $db_logs = new DbLogs();
+    $db_logs->delete_logs_table();
 });

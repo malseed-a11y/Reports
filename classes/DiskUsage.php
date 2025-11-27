@@ -1,6 +1,6 @@
 <?php
 
-namespace Reports\classes;
+namespace SimpleReports\classes;
 
 if (!defined('ABSPATH')) die('-1');
 

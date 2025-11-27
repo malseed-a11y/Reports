@@ -1,6 +1,6 @@
 <?php
 
-namespace Reports\db;
+namespace SimpleReports\db;
 
 if (!defined('ABSPATH')) die('-1');
 class DbUsage

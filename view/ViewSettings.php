@@ -1,6 +1,6 @@
 <?php
 
-namespace Reports\view;
+namespace SimpleReports\view;
 
 if (!defined('ABSPATH')) {
     die('-1');
@@ -18,30 +18,21 @@ class ViewSettings
             isset($_POST['reports_settings_nonce']) &&
             wp_verify_nonce($_POST['reports_settings_nonce'], 'reports_settings_save')
         ) {
-            $interval = isset($_POST['reports_usage_interval']) ? (int) $_POST['reports_usage_interval'] : 1000;
-            if ($interval < 1000) {
-                $interval = 1000;
-            }
-            update_option('reports_usage_interval', $interval);
+            $interval = isset($_POST['usage_interval']) && $_POST['usage_interval'] >= 1000 ? (int) $_POST['usage_interval'] : 1000;
 
-            $retention = isset($_POST['reports_logs_retention_days']) ? (int) $_POST['reports_logs_retention_days'] : 30;
-            if ($retention < 1) {
-                $retention = 1;
-            }
-            update_option('reports_logs_retention_days', $retention);
+            update_option('usage_interval', $interval);
+
+            $retention = isset($_POST['reports_logs_days']) && $_POST['reports_logs_days'] >= 5 ? (int) $_POST['reports_logs_days'] : 30;
+            update_option('reports_logs_days', $retention);
 
             echo '<div class="updated"><p>Settings saved.</p></div>';
         }
 
-        $current_interval  = (int) get_option('reports_usage_interval', 1000);
-        if ($current_interval < 1000) {
-            $current_interval = 1000;
-        }
+        $current_interval  = (int) get_option('usage_interval', 1000) >= 1000 ? (int) get_option('usage_interval', 1000) : 1000;
 
-        $current_retention = (int) get_option('reports_logs_retention_days', 30);
-        if ($current_retention < 5) {
-            $current_retention = 5;
-        }
+
+        $current_retention = (int) get_option('reports_logs_days', 30) >= 5 ? (int) get_option('reports_logs_days', 30) : 5;
+
 ?>
         <div class="wrap">
             <h1>Reports Settings</h1>
@@ -52,15 +43,15 @@ class ViewSettings
                 <table class="form-table">
                     <tr>
                         <th scope="row">
-                            <label for="reports_usage_interval">
+                            <label for="usage_interval">
                                 Update interval (ms)
                             </label>
                         </th>
                         <td>
                             <input
                                 type="number"
-                                id="reports_usage_interval"
-                                name="reports_usage_interval"
+                                id="usage_interval"
+                                name="usage_interval"
                                 min="1000"
                                 step="500"
                                 value="<?php echo esc_attr($current_interval); ?>" />
@@ -72,15 +63,15 @@ class ViewSettings
 
                     <tr>
                         <th scope="row">
-                            <label for="reports_logs_retention_days">
+                            <label for="reports_logs_days">
                                 Login logs retention (days)
                             </label>
                         </th>
                         <td>
                             <input
                                 type="number"
-                                id="reports_logs_retention_days"
-                                name="reports_logs_retention_days"
+                                id="reports_logs_days"
+                                name="reports_logs_days"
                                 min="1"
                                 step="1"
                                 value="<?php echo esc_attr($current_retention); ?>" />

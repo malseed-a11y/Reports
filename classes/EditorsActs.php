@@ -1,8 +1,8 @@
 <?php
 
-namespace Reports\classes;
+namespace SimpleReports\classes;
 
-use Reports\db\DbEditorActivities;
+use SimpleReports\db\DbEditorActivities;
 
 if (!defined('ABSPATH')) {
     die('-1');

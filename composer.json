@@ -1,6 +1,6 @@
 {
-  "name": "mosaab/reports",
-  "description": "Reports",
+  "name": "SimpleReports/SimpleReports",
+  "description": "A WordPress plugin for simple reports.",
   "version": "1.0.0",
   "authors": [
     {
@@ -12,9 +12,9 @@
   },
   "autoload": {
     "psr-4": {
-      "Reports\\classes\\": "classes/",
-      "Reports\\db\\": "db/",
-      "Reports\\view\\": "view/"
+      "SimpleReports\\classes\\": "classes/",
+      "SimpleReports\\db\\": "db/",
+      "SimpleReports\\view\\": "view/"
     }
   }
 }

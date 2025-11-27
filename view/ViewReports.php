@@ -1,8 +1,8 @@
 <?php
 
-namespace Reports\view;
+namespace SimpleReports\view;
 
-use Reports\classes\DiskUsage;
+use SimpleReports\classes\DiskUsage;
 
 if (!defined('ABSPATH')) die('-1');
 

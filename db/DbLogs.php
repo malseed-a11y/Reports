@@ -1,6 +1,6 @@
 <?php
 
-namespace Reports\db;
+namespace SimpleReports\db;
 
 if (!defined('ABSPATH')) die('-1');
 
@@ -67,11 +67,12 @@ class DbLogs
             return;
         }
 
-        $threshold = gmdate('Y-m-d H:i:s', time() - $days * DAY_IN_SECONDS);
+        $tn = current_time("mysql");
+        $delete_date = date('Y-m-d H:i:s', strtotime("$tn -$days days"));
 
         $sql = $this->db->prepare(
             "DELETE FROM {$this->table_logs} WHERE login_time < %s",
-            $threshold
+            $delete_date
         );
 
         $this->db->query($sql);

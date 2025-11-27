@@ -1,14 +1,14 @@
 <?php
 
-namespace Reports\view;
+namespace SimpleReports\view;
 
 
 
 if (!defined('ABSPATH')) die('-1');
 
-use Reports\classes\EditorsActs;
-use Reports\db\DbUsage;
-use Reports\db\DbLogs;
+use SimpleReports\classes\EditorsActs;
+use SimpleReports\db\DbUsage;
+use SimpleReports\db\DbLogs;
 
 class ViewLogs
 {
