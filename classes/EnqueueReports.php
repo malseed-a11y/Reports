@@ -1,14 +1,14 @@
 <?php
 
-namespace SimpleReports\classes;
+namespace SimpleReportsNamespace\classes;
 
 if (!defined('ABSPATH')) die('-1');
 
-use SimpleReports\classes\DiskUsage;
-use SimpleReports\classes\RamCpuUsage;
-use SimpleReports\classes\UserCount;
-use SimpleReports\db\DbUsage;
-use SimpleReports\classes\EditorsActs;
+use SimpleReportsNamespace\classes\DiskUsage;
+use SimpleReportsNamespace\classes\RamCpuUsage;
+use SimpleReportsNamespace\classes\UserCount;
+use SimpleReportsNamespace\db\DbUsage;
+use SimpleReportsNamespace\classes\EditorsActs;
 
 
 class EnqueueReports

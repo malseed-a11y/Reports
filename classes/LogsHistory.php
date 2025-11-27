@@ -1,8 +1,8 @@
 <?php
 
-namespace SimpleReports\classes;
+namespace SimpleReportsNamespace\classes;
 
-use SimpleReports\db\DbLogs;
+use SimpleReportsNamespace\db\DbLogs;
 
 if (!defined('ABSPATH')) die('-1');
 

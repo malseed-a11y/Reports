@@ -1,5 +1,5 @@
 {
-  "name": "SimpleReports/SimpleReports",
+  "name": "vendor/simplereports",
   "description": "A WordPress plugin for simple reports.",
   "version": "1.0.0",
   "authors": [
@@ -12,9 +12,9 @@
   },
   "autoload": {
     "psr-4": {
-      "SimpleReports\\classes\\": "classes/",
-      "SimpleReports\\db\\": "db/",
-      "SimpleReports\\view\\": "view/"
+      "SimpleReportsNamespace\\classes\\": "classes/",
+      "SimpleReportsNamespace\\db\\": "db/",
+      "SimpleReportsNamespace\\view\\": "view/"
     }
   }
 }

@@ -1,10 +1,10 @@
 <?php
 
-namespace SimpleReports\classes;
+namespace SimpleReportsNamespace\classes;
 
 if (!defined('ABSPATH')) die('-1');
 
-use SimpleReports\db\DbUsage;
+use SimpleReportsNamespace\db\DbUsage;
 
 class UserCount
 {

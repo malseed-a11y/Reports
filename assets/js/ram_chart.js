@@ -1,8 +1,5 @@
-// assets/js/ram_chart.js
-
-// نأخذ الـ interval من PHP (Settings) مع حد أدنى 1000ms
 const RAM_POLL_INTERVAL = Math.max(Number(RamAjax.interval) || 1000, 1000);
-// عدد النقاط القصوى في الشارت
+
 const RAM_MAX_POINTS = 30;
 
 let ramLabels = [];

@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleReports\db;
+namespace SimpleReportsNamespace\db;
 
 if (!defined('ABSPATH')) die('-1');
 

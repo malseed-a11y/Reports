@@ -15,7 +15,7 @@
  * Tested up to: 7.0
  */
 
-namespace SimpleReports;
+namespace SimpleReportsNamespace;
 
 if (!defined('ABSPATH')) die('-1');
 
@@ -23,16 +23,16 @@ define('REPORTS_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';
 
-use SimpleReports\classes\LogsHistory;
-use SimpleReports\classes\EnqueueReports;
-use SimpleReports\classes\RamCpuUsage;
+use SimpleReportsNamespace\classes\LogsHistory;
+use SimpleReportsNamespace\classes\EnqueueReports;
+use SimpleReportsNamespace\classes\RamCpuUsage;
 
-use SimpleReports\db\DbEditorActivities;
-use SimpleReports\db\DbLogs;
+use SimpleReportsNamespace\db\DbEditorActivities;
+use SimpleReportsNamespace\db\DbLogs;
 
-use SimpleReports\view\ViewReports;
-use SimpleReports\view\ViewLogs;
-use SimpleReports\view\ViewSettings;
+use SimpleReportsNamespace\view\ViewReports;
+use SimpleReportsNamespace\view\ViewLogs;
+use SimpleReportsNamespace\view\ViewSettings;
 
 class SimpleReports
 {
@@ -41,6 +41,7 @@ class SimpleReports
     public $logs_view;
     public $settings_view;
     public $db_logs;
+
     public function __construct()
     {
         $this->report_view   = new ViewReports();
@@ -54,7 +55,7 @@ class SimpleReports
         add_action('admin_enqueue_scripts', [$this->enqueue, 'enqueue']);
 
         add_action('wp', [$this, 'register_my_cronjob']);
-        add_action([$this, 'register_my_cronjob'], [$this, 'register_my_cronjob_function']);
+        add_action('reports_cleanup_logs', [$this, 'register_my_cronjob_function']);
     }
 
     public function add_admin_menu()
@@ -97,6 +98,7 @@ class SimpleReports
     public function register_my_cronjob()
     {
         if (!wp_next_scheduled('reports_cleanup_logs')) {
+
             wp_schedule_event(time(), 'hourly', 'reports_cleanup_logs');
         }
     }
@@ -113,19 +115,21 @@ if (!class_exists('SimpleReports')) {
     new SimpleReports();
 }
 
-
 // Ajax handler for RAM and CPU usage
 add_action('wp_ajax_reports_usage', function () {
     $usage = new RamCpuUsage();
     $usage->output_json();
+    wp_die();
 });
 
 add_action('wp_ajax_nopriv_reports_usage', function () {
     $usage = new RamCpuUsage();
     $usage->output_json();
+    wp_die();
 });
 
-// Plugin activation and deactivation hooks
+
+// Register activation and deactivation hooks
 register_activation_hook(__FILE__, function () {
     $db_acts = new DbEditorActivities();
     $db_acts->create_table();

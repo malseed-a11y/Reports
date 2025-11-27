@@ -1,6 +1,6 @@
 <?php
 
-namespace SimpleReports\view;
+namespace SimpleReportsNamespace\view;
 
 if (!defined('ABSPATH')) {
     die('-1');
