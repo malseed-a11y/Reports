@@ -9,7 +9,7 @@ class DiskUsage
 
 
 
-    public function get_folder_size($dir)
+    private function get_folder_size($dir)
     {
         $size = 0;
 

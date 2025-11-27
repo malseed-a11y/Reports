@@ -25,7 +25,7 @@ class EnqueueReports
         $this->db = new DbUsage();
         $this->disk = new DiskUsage();
         $this->editors = new EditorsActs();
-        // $this->usage->save_usage();
+
 
         $this->users = new UserCount();
         $this->users->save_users_count();
