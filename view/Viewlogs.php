@@ -19,7 +19,6 @@ class ViewLogs
     public function __construct()
     {
         $this->acts = new EditorsActs();
-        $this->db_usage = new DbUsage();
         $this->db_logs = new DbLogs();
     }
 

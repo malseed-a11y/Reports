@@ -7,7 +7,6 @@ if (!defined('ABSPATH')) die('-1');
 use SimpleReportsNamespace\classes\DiskUsage;
 use SimpleReportsNamespace\classes\RamCpuUsage;
 use SimpleReportsNamespace\classes\UserCount;
-use SimpleReportsNamespace\db\DbUsage;
 use SimpleReportsNamespace\classes\EditorsActs;
 
 
@@ -22,13 +21,8 @@ class EnqueueReports
     public function __construct()
     {
         $this->usage = new RamCpuUsage();
-        $this->db = new DbUsage();
         $this->disk = new DiskUsage();
         $this->editors = new EditorsActs();
-
-
-        $this->users = new UserCount();
-        $this->users->save_users_count();
     }
 
     public function enqueue()
