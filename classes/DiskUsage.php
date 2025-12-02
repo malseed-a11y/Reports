@@ -7,7 +7,9 @@ if (!defined('ABSPATH')) die('-1');
 class DiskUsage
 {
 
-
+    /*
+    Calculate folder size recursively
+*/
 
     private function get_folder_size($dir)
     {
@@ -30,8 +32,9 @@ class DiskUsage
 
         return $size;
     }
-
-
+    /*
+    Get size report of main WordPress folders
+*/
     public function get_main_folders_report()
     {
         $report = [];

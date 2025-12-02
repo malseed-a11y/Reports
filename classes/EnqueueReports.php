@@ -73,19 +73,6 @@ class EnqueueReports
         ]);
 
 
-        // =======================================================
-        // Users count 
-        // =======================================================
-        // $user_count = $this->db->get_usage_data('users_count');
-        // $user_labels = array_column($user_count, 'created_at');
-        // $user_data = array_column($user_count, 'value_usage');
-
-        // wp_enqueue_script('user-chart-js', REPORTS_PLUGIN_URL . 'assets/js/user_chart.js', ['chart-js'], null, true);
-
-        // wp_localize_script('user-chart-js', 'userData', [
-        //     'labels' => $user_labels,
-        //     'data' => $user_data,
-        // ]);
 
         // =======================================================
         // Disk chart

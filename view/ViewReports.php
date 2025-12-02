@@ -15,7 +15,7 @@ class ViewReports
         $this->disk = new DiskUsage();
     }
 
-    public function render_admin_page()
+    public function render_reports_page()
     {
 
         ob_start();
@@ -54,13 +54,15 @@ class ViewReports
                 $disk_used = max($disk_total - $disk_free, 0);
 
 
-
-                echo "<div class='disk-stats'>";
-                echo "<p>Total : " .  $bytes_to_gb($disk_total) . " GB</p>";
-                echo "<p>Free : " . $bytes_to_gb($disk_free) . " GB</p>";
-                echo "<p>Used : " . $bytes_to_gb($disk_used) . " GB</p>";
-                echo "</div>";
                 ?>
+
+
+                <div class='disk-stats'>
+                    <p>Total : <?php echo $bytes_to_gb($disk_total); ?> GB</p>
+                    <p>Free : <?php echo $bytes_to_gb($disk_free); ?> GB</p>
+                    <p>Used : <?php echo $bytes_to_gb($disk_used); ?> GB</p>
+                </div>
+
 
 
             </div>

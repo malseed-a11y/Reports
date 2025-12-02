@@ -91,7 +91,7 @@ class SimpleReports
 
     public function render_reports_page()
     {
-        echo $this->report_view->render_admin_page();
+        echo $this->report_view->render_reports_page();
     }
 
 
