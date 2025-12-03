@@ -11,15 +11,12 @@ class RamCpuUsage
 
 
 
-    /**
-     * Outputs the CPU and RAM usage as JSON.
-     */
     // is it a Windows OS
-
     protected function isWindows()
     {
         return stripos(PHP_OS, 'WIN') === 0;
     }
+
     // output json
     public function output_json()
     {

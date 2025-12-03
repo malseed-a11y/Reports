@@ -21,56 +21,33 @@ class LogsHistory
     }
 
 
-    /*
-     Get user role 
-    */
+    //============================
+    //Get user role 
     public function get_user_role($user_id)
     {
         if (!$user_id) return 'Guest';
 
         $user = new WP_User($user_id);
-        if (empty($user->roles)) return 'N/A';
+        if (empty($user->roles)) return 'Guest';
 
         return reset($user->roles);
     }
+    //===========================
 
 
-    /*
-     Get user IP address 
-    */
 
+    //============================
+    //Get IP address
     public function get_ip_address()
     {
-        $ip_keys = [
-            'HTTP_CLIENT_IP',
-            'HTTP_X_FORWARDED_FOR',
-            'HTTP_X_FORWARDED',
-            'HTTP_X_CLUSTER_CLIENT_IP',
-            'HTTP_FORWARDED_FOR',
-            'HTTP_FORWARDED',
-            'REMOTE_ADDR'
-        ];
-
-        foreach ($ip_keys as $key) {
-            if (!empty($_SERVER[$key])) {
-
-                $ip_list = explode(',', $_SERVER[$key]);
-                foreach ($ip_list as $ip) {
-                    $ip = trim($ip);
-
-                    if (filter_var($ip, FILTER_VALIDATE_IP)) {
-                        return $ip;
-                    }
-                }
-            }
-        }
-
-        return '0.0.0.0';
+        return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
     }
-    /*
-    insert login activity data
- */
+    //============================
 
+
+
+    //============================
+    //Handle login insert to db
     public function login_activity_add($username, $user_id, $status, $ip, $role)
     {
         $time = current_time('mysql');
@@ -85,11 +62,11 @@ class LogsHistory
 
         return $this->db->insert_logs_data($data);
     }
+    //============================
 
 
-    /*
-    Handle successful login
-    */
+    //============================
+    //Handle successful login
     public function login_success($user_login, $user)
     {
         $ip = $this->get_ip_address();
@@ -97,10 +74,11 @@ class LogsHistory
         $role = $this->get_user_role($user_id);
         $this->login_activity_add($user_login, $user_id, '🟩 success', $ip, $role);
     }
-    /*
-    Handle failed login
-    */
+    //============================
 
+
+    //============================
+    //Handle failed login
     public function login_failed($username)
     {
         $ip = $this->get_ip_address();
@@ -108,4 +86,5 @@ class LogsHistory
         $role = 'N/A';
         $this->login_activity_add($username, $user_id, '🟥 failed', $ip, $role);
     }
+    //============================
 }

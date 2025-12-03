@@ -4,42 +4,56 @@ namespace SimpleReportsNamespace\classes;
 
 if (!defined('ABSPATH')) die('-1');
 
+use RecursiveIteratorIterator;
+
 class DiskUsage
 {
 
-    /*
-    Calculate folder size recursively
-*/
+
 
     private function get_folder_size($dir)
     {
         $size = 0;
-
+        //============================
+        // Validate directory
         if (!is_dir($dir) || !is_readable($dir)) {
             return 0;
         }
+        //============================
 
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS)
+        //============================
+        // make a flat list of all the files inside the directory
+
+        //1) Create a directory iterator to read all files and folders in $dir
+        $directoryIterator = new \RecursiveDirectoryIterator(
+            $dir,
+            \FilesystemIterator::SKIP_DOTS
         );
+        // 2) Wrap the directory iterator in a recursive iterator to traverse subdirectories
+        $iterator = new \RecursiveIteratorIterator(
+            $directoryIterator
+        );
+        //============================
 
+        //============================
+        // loop through the files
         foreach ($iterator as $file) {
 
             if ($file->isFile()) {
                 $size += $file->getSize();
             }
         }
+        //============================
 
         return $size;
     }
-    /*
-    Get size report of main WordPress folders
-*/
+
     public function get_main_folders_report()
     {
+
+        //============================
+        // Get sizes of main WP folders
         $report = [];
-
-
         $report['root'] = $this->get_folder_size(ABSPATH);
 
         // wp-content
@@ -66,6 +80,7 @@ class DiskUsage
 
         $report['disk_total'] = disk_total_space(ABSPATH);
         $report['disk_free']  = disk_free_space(ABSPATH);
+        //============================
 
         return $report;
     }

@@ -19,6 +19,7 @@ class ViewReports
     {
 
         ob_start();
+
 ?>
         <div class="wrap-reports">
             <h1>Server Reports</h1>

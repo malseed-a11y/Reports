@@ -39,46 +39,73 @@ class DbEditorActivities
 
 
 
-    public function add_activity($user_id, $username, $type)
+    public function insert_new_editor($user_id, $username)
     {
         if ($this->db->get_var("SHOW TABLES LIKE '{$this->table_name}'") !== $this->table_name) {
             $this->create_table();
         }
 
-        if ($type === 'post') {
-            $column = 'posts_number';
-        } elseif ($type === 'edit') {
-            $column = 'edits_number';
-        } elseif ($type === 'delete') {
-            $column = 'deletes_number';
-        } else {
-            return false;
-        }
-
-        $now = current_time('mysql');
-
-        $sql = $this->db->prepare(
-            "INSERT INTO {$this->table_name}
-                (user_id, username, {$column}, last_updated)
-             VALUES (%d, %s, 1, %s)
-             ON DUPLICATE KEY UPDATE
-                {$column} = {$column} + 1,
-                username = VALUES(username),
-                last_updated = VALUES(last_updated)",
-            $user_id,
-            $username,
-            $now
-        );
-
-        return $this->db->query($sql);
+        $data = [
+            'user_id'      => $user_id,
+            'username'     => $username,
+            'posts_number' => 0,
+            'edits_number' => 0,
+            'deletes_number' => 0,
+            'last_updated' => current_time('mysql'),
+        ];
+        $this->db->insert($this->table_name, $data);
     }
 
-    public function get_activity()
+
+    public function update_editor($user_id, $username, $post_number = 0, $edit_number = 0, $delete_number = 0)
     {
 
+        $existing = $this->db->get_row(
+            $this->db->prepare(
+                "SELECT * FROM {$this->table_name} WHERE user_id = %d",
+                $user_id
+            ),
+            ARRAY_A
+        );
+        if (!$existing) {
+            $this->insert_new_editor($user_id, $username);
+        }
+
+
+        $data = [
+            'user_id'      => $user_id,
+            'username'     => $username,
+            'posts_number' => $post_number,
+            'edits_number' => $edit_number,
+            'deletes_number' => $delete_number,
+            'last_updated' => current_time('mysql'),
+        ];
+
+        $this->db->update(
+            $this->table_name,
+            $data,
+            ['user_id' => $user_id]
+        );
+    }
+
+
+    public function get_activity($user_id)
+    {
+        return $this->db->get_row(
+            $this->db->prepare(
+                "SELECT user_id, username, posts_number, edits_number, deletes_number
+             FROM {$this->table_name}
+             WHERE user_id = %d",
+                $user_id
+            ),
+            ARRAY_A
+        );
+    }
+    public function get_all_activities()
+    {
         return $this->db->get_results(
             "SELECT user_id, username, posts_number, edits_number, deletes_number
-             FROM {$this->table_name}",
+         FROM {$this->table_name}",
             ARRAY_A
         );
     }
