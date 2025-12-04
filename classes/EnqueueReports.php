@@ -6,7 +6,6 @@ if (!defined('ABSPATH')) die('-1');
 
 use SimpleReportsNamespace\classes\DiskUsage;
 use SimpleReportsNamespace\classes\RamCpuUsage;
-use SimpleReportsNamespace\classes\UserCount;
 use SimpleReportsNamespace\classes\EditorsActs;
 
 
@@ -25,8 +24,18 @@ class EnqueueReports
         $this->editors = new EditorsActs();
     }
 
+    private function bytes_to_mb($bytes)
+    {
+        if ($bytes <= 0) {
+            return 0;
+        }
+        return round($bytes / (1024  * 1024), 2);
+    }
+
     public function enqueue()
     {
+
+
         //==styles==
         wp_enqueue_style('reports-styles', REPORTS_PLUGIN_URL . 'assets/css/reports.css');
         wp_enqueue_style('logs-styles', REPORTS_PLUGIN_URL . 'assets/css/logs.css');
@@ -85,13 +94,7 @@ class EnqueueReports
         $_uploads = isset($report['uploads']) ? (int) $report['uploads'] : 0;
         $_admin  = isset($report['wp_admin']) ? (int) $report['wp_admin'] : 0;
         // to MB
-        function bytes_to_mb($bytes)
-        {
-            if ($bytes <= 0) {
-                return 0;
-            }
-            return round($bytes / (1024  * 1024), 2);
-        }
+
 
         wp_enqueue_script(
             'disk-chart-js',
@@ -102,10 +105,10 @@ class EnqueueReports
         );
 
         wp_localize_script('disk-chart-js', 'diskData', [
-            'themes'  => bytes_to_mb($_themes),
-            'plugins' => bytes_to_mb($_plugins),
-            'uploads' => bytes_to_mb($_uploads),
-            'admin'   => bytes_to_mb($_admin),
+            'themes'  => $this->bytes_to_mb($_themes),
+            'plugins' => $this->bytes_to_mb($_plugins),
+            'uploads' => $this->bytes_to_mb($_uploads),
+            'admin'   => $this->bytes_to_mb($_admin),
 
         ]);
 

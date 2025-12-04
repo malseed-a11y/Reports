@@ -15,7 +15,6 @@ class LogsHistory
 
     public function __construct()
     {
-        $this->db = new DbLogs();
         add_action('wp_login', [$this, 'login_success'], 10, 2);
         add_action('wp_login_failed', [$this, 'login_failed']);
     }
@@ -37,10 +36,10 @@ class LogsHistory
 
 
     //============================
-    //Get IP address
+    //Get IP address of the visitor
     public function get_ip_address()
     {
-        return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['HTTP_CLIENT_IP'] ?? $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
     }
     //============================
 
@@ -50,6 +49,8 @@ class LogsHistory
     //Handle login insert to db
     public function login_activity_add($username, $user_id, $status, $ip, $role)
     {
+        $this->db = new DbLogs();
+
         $time = current_time('mysql');
         $data = [
             'username' => $username,

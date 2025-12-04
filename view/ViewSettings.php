@@ -8,6 +8,9 @@ if (!defined('ABSPATH')) {
 
 class ViewSettings
 {
+
+    public function __construct() {}
+
     public function render_settings_page()
     {
         if (!is_admin() || !current_user_can('manage_options')) {

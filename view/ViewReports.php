@@ -10,13 +10,11 @@ class ViewReports
 {
     public $disk;
 
-    public function __construct()
-    {
-        $this->disk = new DiskUsage();
-    }
+    public function __construct() {}
 
     public function render_reports_page()
     {
+        $this->disk = new DiskUsage();
 
         ob_start();
 

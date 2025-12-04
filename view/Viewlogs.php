@@ -9,13 +9,13 @@ class ViewLogs
 {
     public $acts;
     public $db_logs;
-    public function __construct()
+    public function __construct() {}
+
+    public function render_logs_page()
     {
         $this->acts = new EditorsActs();
         $this->db_logs = new DbLogs();
-    }
-    public function render_logs_page()
-    {
+
 ?>
         <div class="wrap-logs">
             <h1>Logs Reports</h1>

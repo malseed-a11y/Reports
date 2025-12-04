@@ -9,19 +9,22 @@ if (!defined('ABSPATH')) {
 class RamCpuUsage
 {
 
+    public function __construct() {}
 
-
+    //============================
     // is it a Windows OS
     protected function isWindows()
     {
         return stripos(PHP_OS, 'WIN') === 0;
     }
+    //============================
 
+    //============================
     // output json
     public function output_json()
     {
-        $cpu = $this->isWindows() ? $this->getCpuUsageWindows() : $this->getCpuUsageLinux();
-        $ram = $this->isWindows() ? $this->getRamUsageWindows() : $this->get_linux_ram();
+        $cpu = $this->isWindows() ? $this->get_wind_cpu() : $this->get_linux_cpu();
+        $ram = $this->isWindows() ? $this->get_wind_ram() : $this->get_linux_ram();
 
         header('Content-Type: application/json');
 
@@ -35,11 +38,10 @@ class RamCpuUsage
             wp_die();
         }
     }
+    //============================
 
-    /**
-     * Gets RAM usage on Linux by reading /proc/meminfo.
-     */
-
+    //============================
+    // Gets RAM usage on LINUX by 'free' command.
     public function get_linux_ram()
     {
         if (!function_exists('shell_exec')) {
@@ -65,10 +67,13 @@ class RamCpuUsage
 
         return 0.0;
     }
-    /**
-     * Gets CPU usage on Linux by reading /proc/stat twice.
-     */
-    protected function getCpuUsageLinux()
+    //============================
+
+
+
+    //============================
+    // Gets CPU usage on LINUX by 'top' command.
+    protected function get_linux_cpu()
     {
         if (!function_exists('shell_exec')) {
             return 0.0;
@@ -87,11 +92,9 @@ class RamCpuUsage
 
         return round($cpuUsage, 2);
     }
-
-    /**
-     * Gets CPU usage on Windows using WMIC.
-     */
-    protected function getCpuUsageWindows()
+    //============================
+    // Gets CPU usage on WINDOWS using 'wmic' command.
+    protected function get_wind_cpu()
     {
         if (!function_exists('shell_exec')) {
             return 0.0;
@@ -109,11 +112,11 @@ class RamCpuUsage
 
         return 0.0;
     }
+    //============================
 
-    /**
-     * Gets RAM usage on Windows using WMIC.
-     */
-    protected function getRamUsageWindows()
+    //============================
+    // Gets RAM usage on WINDOWS using 'wmic' command.
+    protected function get_wind_ram()
     {
         if (!function_exists('shell_exec')) {
             return 0.0;
@@ -145,4 +148,5 @@ class RamCpuUsage
 
         return round($percent, 2);
     }
+    //============================
 }

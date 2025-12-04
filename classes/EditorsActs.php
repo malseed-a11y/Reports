@@ -14,11 +14,8 @@ class EditorsActs
 
     public function __construct()
     {
-        $this->db = new DbEditorActivities();
 
         add_action('transition_post_status', [$this, 'handle_post_saved'], 10, 3);
-
-        add_action('deleted_post', [$this, 'handle_post_deleted'], 10, 2);
     }
 
 
@@ -53,6 +50,10 @@ class EditorsActs
 
     public function handle_post_saved($new_status, $old_status, $post)
     {
+
+
+        $this->db = new DbEditorActivities();
+
         //============================
         // Validate post type = 'post' AND user role AND only when published
         if ($post->post_type !== 'post') {
@@ -81,8 +82,13 @@ class EditorsActs
         //============================
 
         //=============================
-        // Update edit count in DB
+        // Get current data from DB
         $current_data = $this->db->get_activity($user_id);
+        //=============================
+
+
+        //=============================
+        // Update edit count in DB
 
         if ($old_status === 'publish' && $new_status === 'publish') {
 
@@ -116,51 +122,24 @@ class EditorsActs
             );
         }
         //=============================
-    }
-
-
-    public function handle_post_deleted($post_id, $post)
-    {
-
-        //============================
-        // Validate post type = 'post' AND user role
-        if ($post->post_type !== 'post') {
-            return;
-        }
-        $user_id = get_current_user_id();
-        if (!$this->is_valid($user_id)) {
-            return;
-        }
-        //============================
-
-
-        // ===========================
-        // make sure we only count onse
-        static $processed_deletes = [];
-        $key = $user_id . ':' . $post_id;
-
-        if (isset($processed_deletes[$key])) {
-            return;
-        }
-        $processed_deletes[$key] = true;
-        // ===========================
 
 
         //=============================
         // Update delete count in DB
-        $current_data = $this->db->get_activity($user_id);
+        if ($old_status === 'publish' && $new_status === 'trash') {
 
-        $delete_number = isset($current_data['deletes_number'])
-            ? (int) $current_data['deletes_number'] + 1
-            : 1;
+            $delete_number = isset($current_data['deletes_number'])
+                ? (int) $current_data['deletes_number'] + 1
+                : 1;
 
-        $this->db->update_editor(
-            $user_id,
-            wp_get_current_user()->user_login,
-            $current_data['posts_number'],
-            $current_data['edits_number'],
-            $delete_number
-        );
+            $this->db->update_editor(
+                $user_id,
+                wp_get_current_user()->user_login,
+                $current_data['posts_number'],
+                $current_data['edits_number'],
+                $delete_number
+            );
+        }
         //=============================
     }
 
@@ -169,6 +148,9 @@ class EditorsActs
     {
         //============================
         // To insert data into chart
+
+        $this->db = new DbEditorActivities();
+
         $rows = $this->db->get_all_activities();
         $labels  = [];
         $totals  = [];
