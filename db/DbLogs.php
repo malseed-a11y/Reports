@@ -13,7 +13,7 @@ class DbLogs
     {
         global $wpdb;
         $this->db = $wpdb;
-        $this->table_name = $wpdb->prefix . 'report_table_name';
+        $this->table_name = $wpdb->prefix . 'sr_table_logs';
     }
 
     public function create_logs_table()

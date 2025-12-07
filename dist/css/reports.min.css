@@ -6,12 +6,6 @@
   max-width: 1200px;
   margin: 40px auto;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  /* ===============================
-     Report Section (CPU + RAM )
-     ===============================*/
-  /* ===============================
-     Disk Usage Section
-     ===============================*/
 }
 .wrap-reports h1 {
   text-align: center;
@@ -25,6 +19,11 @@
   color: #555;
   margin-bottom: 18px;
   font-size: 22px;
+}
+.wrap-reports {
+  /* ===============================
+     Report Section (CPU + RAM )
+     ===============================*/
 }
 .wrap-reports .report-section {
   display: flex;
@@ -53,6 +52,11 @@
   display: block;
   width: 100% !important;
   height: 100% !important;
+}
+.wrap-reports {
+  /* ===============================
+     Disk Usage Section
+     ===============================*/
 }
 .wrap-reports .disk-section {
   background: #ffffff;
@@ -113,4 +117,5 @@
   .wrap-reports .disk-section {
     max-width: 90%;
   }
-}/*# sourceMappingURL=reports.css.map */
+}
+/*# sourceMappingURL=map/reports.min.css.map */

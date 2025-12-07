@@ -32,13 +32,15 @@ class EnqueueReports
         return round($bytes / (1024  * 1024), 2);
     }
 
-    public function enqueue()
+    public function enqueue($hook)
     {
 
-
+        if (strpos($hook, 'reports_page') === false) {
+            return;
+        }
         //==styles==
-        wp_enqueue_style('reports-styles', REPORTS_PLUGIN_URL . 'assets/css/reports.css');
-        wp_enqueue_style('logs-styles', REPORTS_PLUGIN_URL . 'assets/css/logs.css');
+        wp_enqueue_style('reports-styles', REPORTS_PLUGIN_URL . 'dist/css/reports.min.css');
+        wp_enqueue_style('logs-styles', REPORTS_PLUGIN_URL . 'dist/css/logs.min.css');
 
         //==js==
         wp_enqueue_script('chart-js', 'https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.min.js', [], null);
@@ -54,7 +56,7 @@ class EnqueueReports
         // CPU
         wp_enqueue_script(
             'cpu-chart-js',
-            REPORTS_PLUGIN_URL . 'assets/js/cpu_chart.js',
+            REPORTS_PLUGIN_URL . 'dist/js/cpu_chart.min.js',
             ['chart-js'],
             null,
             true
@@ -69,7 +71,7 @@ class EnqueueReports
         // RAM
         wp_enqueue_script(
             'ram-chart-js',
-            REPORTS_PLUGIN_URL . 'assets/js/ram_chart.js',
+            REPORTS_PLUGIN_URL . 'dist/js/ram_chart.min.js',
             ['chart-js'],
             null,
             true
@@ -85,7 +87,6 @@ class EnqueueReports
 
         // =======================================================
         // Disk chart
-        // =======================================================
         $report = $this->disk->get_main_folders_report();
 
         // main folders (bytes)
@@ -98,7 +99,7 @@ class EnqueueReports
 
         wp_enqueue_script(
             'disk-chart-js',
-            REPORTS_PLUGIN_URL . 'assets/js/disk_chart.js',
+            REPORTS_PLUGIN_URL . 'dist/js/disk_chart.min.js',
             ['chart-js'],
             null,
             true
@@ -111,16 +112,16 @@ class EnqueueReports
             'admin'   => $this->bytes_to_mb($_admin),
 
         ]);
+        // =======================================================
 
 
         // =======================================================
         // Editors activity 
-        // =======================================================
         $editors_activity = $this->editors->editors_activity();
 
         wp_enqueue_script(
             'editors-chart-js',
-            REPORTS_PLUGIN_URL . 'assets/js/editors_chart.js',
+            REPORTS_PLUGIN_URL . 'dist/js/editors_chart.min.js',
             ['chart-js'],
             null,
             true
@@ -131,5 +132,6 @@ class EnqueueReports
             'totals'  => $editors_activity['totals'],
             'details' => $editors_activity['details'],
         ]);
+        // =======================================================
     }
 }

@@ -65,7 +65,7 @@ class EditorsActs
             return;
         }
 
-        if ($new_status !== 'publish') {
+        if ($new_status !== 'publish' && $new_status !== 'trash') {
             return;
         }
         //============================
@@ -126,7 +126,7 @@ class EditorsActs
 
         //=============================
         // Update delete count in DB
-        if ($old_status === 'publish' && $new_status === 'trash') {
+        if ($new_status === 'trash') {
 
             $delete_number = isset($current_data['deletes_number'])
                 ? (int) $current_data['deletes_number'] + 1

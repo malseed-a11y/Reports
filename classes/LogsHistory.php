@@ -68,12 +68,12 @@ class LogsHistory
 
     //============================
     //Handle successful login
-    public function login_success($user_login, $user)
+    public function login_success($user_name, $user)
     {
         $ip = $this->get_ip_address();
         $user_id = $user->ID;
         $role = $this->get_user_role($user_id);
-        $this->login_activity_add($user_login, $user_id, '🟩 success', $ip, $role);
+        $this->login_activity_add($user_name, $user_id, '🟩 success', $ip, $role);
     }
     //============================
 

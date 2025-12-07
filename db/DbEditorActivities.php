@@ -15,7 +15,7 @@ class DbEditorActivities
     {
         global $wpdb;
         $this->db        = $wpdb;
-        $this->table_name = $wpdb->prefix . 'reports_editors_activity';
+        $this->table_name = $wpdb->prefix . 'sr_editors_activity';
     }
 
     public function create_table()

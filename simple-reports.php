@@ -99,7 +99,7 @@ class SimpleReports
     {
         if (!wp_next_scheduled('reports_cleanup_logs')) {
 
-            wp_schedule_event(time(), 'hourly', 'reports_cleanup_logs');
+            wp_schedule_event(time(), 'daily', 'reports_cleanup_logs');
         }
     }
     public function register_my_cronjob_function()
