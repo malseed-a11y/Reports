@@ -8,10 +8,18 @@ use RecursiveIteratorIterator;
 
 class DiskUsage
 {
+
     //============================
     // Check if it windows or linux
     private function get_dir_size($dir)
     {
+        //============================
+        // Validate directory
+        if (!is_dir($dir) || !is_readable($dir)) {
+            return 0;
+        }
+        //============================
+
         if (stripos(PHP_OS, 'WIN') === 0) {
             return $this->get_dir_size_windows($dir);
         } else {
@@ -26,12 +34,6 @@ class DiskUsage
     private function get_dir_size_windows($dir)
     {
         $size = 0;
-        //============================
-        // Validate directory
-        if (!is_dir($dir) || !is_readable($dir)) {
-            return 0;
-        }
-        //============================
 
         //============================
         // make a flat list of all the files inside the directory
@@ -71,10 +73,6 @@ class DiskUsage
     {
         //============================
         // validate directory
-        if (!is_readable($dir) && !is_dir($dir)) {
-            return 0;
-        }
-
         if (!function_exists('shell_exec')) {
             return 0;
         }
