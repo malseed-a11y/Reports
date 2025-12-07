@@ -35,7 +35,7 @@ class EnqueueReports
     public function enqueue($hook)
     {
 
-        if (strpos($hook, 'reports_page') === false) {
+        if (strpos($hook, 'reports_page') === false && strpos($hook, "toplevel_page_server-reports") === false) {
             return;
         }
         //==styles==
