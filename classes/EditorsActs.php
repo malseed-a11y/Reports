@@ -109,7 +109,7 @@ class EditorsActs
 
         //=============================
         // Update publish count in DB
-        if ($old_status !== 'publish' && $new_status === 'publish') {
+        if (($old_status === 'auto-draft' || $old_status === 'new' || $old_status === 'draft') && $new_status === 'publish') {
 
             $posts_number = count_user_posts($user_id, 'post');
 
