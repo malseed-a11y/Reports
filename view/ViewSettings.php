@@ -28,7 +28,7 @@ class ViewSettings
             $retention = isset($_POST['reports_logs_days']) && $_POST['reports_logs_days'] >= 5 ? (int) $_POST['reports_logs_days'] : 30;
             update_option('reports_logs_days', $retention);
 
-            echo '<div class="updated"><p>Settings saved.</p></div>';
+            echo '<div><p>Settings saved.</p></div>';
         }
 
         $current_interval  = (int) get_option('usage_interval', 1000) >= 1000 ? (int) get_option('usage_interval', 1000) : 1000;
